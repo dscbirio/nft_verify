@@ -53,7 +53,7 @@ const WalletConnect = () => {
         checkInscriptions(stxAddress);
       });
     }
-  }, [checkInscriptions]);
+  }, []);
 
   const authenticate = () => {
     showConnect({
