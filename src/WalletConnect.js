@@ -29,7 +29,6 @@ const infoMessage = "If you don't want to log in or are experiencing issues with
 const WalletConnect = () => {
   const [address, setAddress] = useState('');
   const [connected, setConnected] = useState(false);
-  const [balance, setBalance] = useState(null);
   const [ownedInscriptions, setOwnedInscriptions] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [email, setEmail] = useState('');
@@ -54,7 +53,7 @@ const WalletConnect = () => {
         checkInscriptions(stxAddress);
       });
     }
-  }, []);
+  }, [checkInscriptions]);
 
   const authenticate = () => {
     showConnect({
@@ -185,7 +184,7 @@ const WalletConnect = () => {
                 {ownedInscriptions.map((inscription) => (
                   <div className="pt-5" key={inscription.id}>
                     <img src={inscription.imageUrl} alt={`Inscription ${inscription.id}`} className="img-fluid mt-3" />
-                    <a href={inscription.imageUrl} className="button" download target="_blank">Download Image</a>
+                    <a href={inscription.imageUrl} className="button" download target="_blank" rel="noreferrer">Download Image</a>
                   </div>
                 ))}
               </div>
@@ -223,7 +222,7 @@ const WalletConnect = () => {
           </div>
         </div>
       )}
-      
+
     </div>
   );
 };
