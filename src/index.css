@@ -11,3 +11,121 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.container-min {
+  max-width: 580px;
+  --bs-gutter-x: 1.5rem;
+  --bs-gutter-y: 0;
+  width: 100%;
+  padding-right: calc(var(--bs-gutter-x)* 0.5);
+  padding-left: calc(var(--bs-gutter-x)* 0.5);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.pt-5 {
+  padding-top: 2rem !important;
+}
+.pb-5 {
+  padding-top: 3rem !important;
+}
+.pt-main {
+  padding-top: 4rem !important;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.justify-content-center {
+  justify-content: center !important;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.mt-5 {
+  margin-top: 3rem !important;
+}
+
+.align-items-center {
+  align-items: center !important;
+}
+
+.justify-content-around {
+  justify-content: space-around !important;
+}
+
+.flex-column {
+  flex-direction: column !important;
+}
+
+.d-flex {
+  display: flex !important;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.mt-5 {
+  margin-top: 3rem !important;
+}
+
+.align-items-center {
+  align-items: center !important;
+}
+
+.justify-content-around {
+  justify-content: space-around !important;
+}
+
+.flex-column {
+  flex-direction: column !important;
+}
+@media (min-width: 576px) {
+  .flex-sm-row {
+    flex-direction: row !important;
+  }
+}
+
+.d-flex {
+  display: flex !important;
+}
+
+
+.img-fluid {
+  max-width: 100%;
+}
+
+.images-img {
+  max-width: 85px;
+}
+
+/* Stylowanie przycisku */
+.button {
+  background-color: #4CAF50; /* Zielony kolor tła */
+  border: none;              /* Bez obramowania */
+  color: white;              /* Biały tekst */
+  padding: 15px 32px;        /* Wewnętrzne marginesy (padding) */
+  text-align: center;        /* Wyśrodkowanie tekstu */
+  text-decoration: none;     /* Brak podkreślenia */
+  display: inline-block;     /* Wyświetlanie w jednej linii */
+  font-size: 16px;           /* Rozmiar czcionki */
+  margin: 4px 2px;           /* Margines wokół przycisku */
+  cursor: pointer;           /* Kursor zmienia się na wskazujący */
+  border-radius: 12px;       /* Zaokrąglone rogi */
+  transition: background-color 0.3s ease; /* Płynna zmiana koloru tła */
+}
+.button-red {
+  background-color: red;
+}
+
+/* Stylowanie przycisku po najechaniu myszką */
+.button:hover {
+  background-color: #45a049; /* Jaśniejszy zielony kolor po najechaniu */
+}
+.button-red:hover {
+  background-color: red;
+}
