@@ -115,7 +115,7 @@ code {
   font-size: 16px;           /* Rozmiar czcionki */
   margin: 4px 2px;           /* Margines wokół przycisku */
   cursor: pointer;           /* Kursor zmienia się na wskazujący */
-  border-radius: 12px;       /* Zaokrąglone rogi */
+  border-radius: 6px;       /* Zaokrąglone rogi */
   transition: background-color 0.3s ease; /* Płynna zmiana koloru tła */
 }
 .button-red {
@@ -128,4 +128,11 @@ code {
 }
 .button-red:hover {
   background-color: red;
+}
+.input {
+  height: 44px;
+  margin-right: 20px;
+  width: 200px;
+  padding: 0px 15px;
+  border-radius: 6px;     
 }

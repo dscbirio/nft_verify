@@ -35,6 +35,7 @@ const WalletConnect = () => {
   const [email, setEmail] = useState('');
   const [showEmailForm, setShowEmailForm] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [formError, setFormError] = useState(''); // Obsługa błędów
 
   useEffect(() => {
     // Sprawdzamy, czy użytkownik jest zalogowany
@@ -108,6 +109,7 @@ const WalletConnect = () => {
 
   const handleSubmitEmail = async (e) => {
     e.preventDefault();
+    setFormError(''); // Reset błędu
     try {
       await axios.post('https://verify-nft-1f716b00da6a.herokuapp.com/save-wallet', {
         email,
@@ -116,6 +118,7 @@ const WalletConnect = () => {
       setFormSubmitted(true);
       setShowEmailForm(false);
     } catch (error) {
+      setFormError('Error submitting your email. Please try again.');
       console.error('Error saving email:', error);
     }
   };
@@ -197,29 +200,17 @@ const WalletConnect = () => {
                   <input
                     type="email"
                     value={email}
+                    className="input"
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Your email"
                     required
                   />
                   <button type="submit" className="button">Submit</button>
                 </form>
+                {formError && <p style={{ color: 'red' }}>{formError}</p>} {/* Komunikat błędu */}
               </div>
             )}
-
             {formSubmitted && <p>Your email has been submitted. Thank you!</p>}
-            <div className="pt-5">
-                <h3>Enter your email to receive updates:</h3>
-                <form onSubmit={handleSubmitEmail}>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Your email"
-                    required
-                  />
-                  <button type="submit" className="button">Submit</button>
-                </form>
-              </div>
           </div>
         </div>
       ) : (
