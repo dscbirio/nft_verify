@@ -65,6 +65,7 @@ const WalletConnect = () => {
       network,
       onFinish: () => {
         const userData = userSession.loadUserData();
+        console.log(userData)
         const stxAddress = network.isMainnet() ? userData.profile.stxAddress.mainnet : userData.profile.stxAddress.testnet;
         setAddress(stxAddress);
         setConnected(true);
