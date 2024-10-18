@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { AppConfig, UserSession, showConnect } from '@stacks/connect';
 import { StacksMainnet, StacksTestnet } from '@stacks/network';
-
+import { request } from "sats-connect";
 // Pobieramy sieć z konfiguracji środowiska
 const network = process.env.REACT_APP_NETWORK === 'mainnet' ? new StacksMainnet() : new StacksTestnet();
 
@@ -36,25 +36,6 @@ const WalletConnect = () => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formError, setFormError] = useState(''); // Obsługa błędów
 
-  useEffect(() => {
-    // Sprawdzamy, czy użytkownik jest zalogowany
-    if (userSession.isUserSignedIn()) {
-      const userData = userSession.loadUserData();
-      const stxAddress = network.isMainnet() ? userData.profile.stxAddress.mainnet : userData.profile.stxAddress.testnet;
-      setAddress(stxAddress);
-      setConnected(true);
-      checkInscriptions(stxAddress);
-    } else if (userSession.isSignInPending()) {
-      userSession.handlePendingSignIn().then(() => {
-        const userData = userSession.loadUserData();
-        const stxAddress = network.isMainnet() ? userData.profile.stxAddress.mainnet : userData.profile.stxAddress.testnet;
-        setAddress(stxAddress);
-        setConnected(true);
-        checkInscriptions(stxAddress);
-      });
-    }
-  }, []);
-
   const authenticate = () => {
     showConnect({
       appDetails: {
@@ -63,15 +44,81 @@ const WalletConnect = () => {
       },
       userSession,
       network,
-      onFinish: () => {
+      onFinish: async () => {
         const userData = userSession.loadUserData();
-        console.log(userData)
         const stxAddress = network.isMainnet() ? userData.profile.stxAddress.mainnet : userData.profile.stxAddress.testnet;
-        setAddress(stxAddress);
-        setConnected(true);
-        checkInscriptions(stxAddress);
+
+        // Teraz po zakończeniu logowania, wykrywamy portfel
+        const walletType = detectWallet(userData);
+
+        // Pobieramy adres Bitcoin na podstawie typu portfela
+        const bitcoinAddress = await getBitcoinAddress(walletType);
+
+        if (bitcoinAddress) {
+          setAddress(bitcoinAddress);
+          setConnected(true);
+          checkInscriptions(bitcoinAddress); // Sprawdzamy inskrypcje dla tego adresu
+        } else {
+          setErrorMessage('Unable to fetch Bitcoin Ordinals address.');
+        }
       },
     });
+  };
+
+  // Funkcja wykrywająca portfel na podstawie kontekstu logowania użytkownika
+  const detectWallet = (userData) => {
+    const walletProvider = userData.profile.walletProvider || 'xverse'; // Domyślnie Xverse, jeśli brak walletProvider
+
+    if (walletProvider === 'leather') {
+      console.log('Detected Leather Wallet');
+      return 'hiro';
+    } else {
+      console.log('Using Xverse Wallet');
+      return 'xverse';
+    }
+  };
+
+  // Funkcja zwracająca adres Bitcoin na podstawie typu portfela
+
+  const getBitcoinAddress = async (walletType) => {
+    try {
+      if (walletType === 'hiro') {
+        console.log('Fetching Bitcoin address for Leather Wallet');
+        if (window.LeatherProvider) {
+          const response = await window.LeatherProvider.request("getAddresses");
+          const btcAddress = response.result.addresses.find(addr => addr.symbol === "BTC");
+          if (btcAddress) {
+            return btcAddress.address;
+          }
+        } else {
+          console.error('Leather Wallet not available');
+        }
+      } else if (walletType === 'xverse') {
+        console.log('Fetching Bitcoin address for Xverse Wallet');
+        const response = await request("getAddresses", {
+          purposes: ['ordinals'], // Tylko ordinals
+          message: 'Fetching your Bitcoin address for Ordinals DApp',
+        });
+
+        console.log('Response from Xverse:', response);
+
+        if (response.status === "success") {
+          // Szukamy adresu z celem 'ordinals'
+          const ordinalsAddress = response.result.addresses.find(addr => addr.purpose === "ordinals");
+          if (ordinalsAddress) {
+            return ordinalsAddress.address;
+          } else {
+            console.error('No ordinals address found');
+          }
+        } else {
+          console.error('Failed to fetch address from Xverse:', response.error);
+        }
+      }
+      return null;
+    } catch (error) {
+      console.error('Error fetching Bitcoin address:', error);
+      return null;
+    }
   };
 
   const checkInscriptions = async (address) => {
