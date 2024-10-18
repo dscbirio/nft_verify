@@ -136,3 +136,21 @@ code {
   padding: 0px 15px;
   border-radius: 6px;     
 }
+
+.d-flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+.ordinal {
+  width: 30%;
+  padding: 0 8px;
+}
+@media (max-width: 576px) {
+  .ordinal {
+    width: 100%;
+    padding: 20px 20px;
+  }
+}
+body {
+  padding-bottom: 100px;
+}

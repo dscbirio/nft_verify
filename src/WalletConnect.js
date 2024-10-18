@@ -36,6 +36,26 @@ const WalletConnect = () => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formError, setFormError] = useState(''); // Obsługa błędów
 
+    // Użyj useEffect do sprawdzania sesji po odświeżeniu strony
+    useEffect(() => {
+      if (userSession.isUserSignedIn()) {
+        const userData = userSession.loadUserData();
+        const stxAddress = network.isMainnet() ? userData.profile.stxAddress.mainnet : userData.profile.stxAddress.testnet;
+        
+        // Pobierz adres Bitcoin po zalogowaniu
+        const walletType = detectWallet(userData);
+        getBitcoinAddress(walletType).then((bitcoinAddress) => {
+          if (bitcoinAddress) {
+            setAddress(bitcoinAddress);
+            setConnected(true);
+            checkInscriptions(bitcoinAddress); // Sprawdź inskrypcje
+          } else {
+            setErrorMessage('Unable to fetch Bitcoin Ordinals address.');
+          }
+        });
+      }
+    }, []);
+
   const authenticate = () => {
     showConnect({
       appDetails: {
@@ -53,7 +73,7 @@ const WalletConnect = () => {
 
         // Pobieramy adres Bitcoin na podstawie typu portfela
         const bitcoinAddress = await getBitcoinAddress(walletType);
-
+        localStorage.setItem('userSession', JSON.stringify(userSession.store));
         if (bitcoinAddress) {
           setAddress(bitcoinAddress);
           setConnected(true);
@@ -171,6 +191,7 @@ const WalletConnect = () => {
   };
 
   const logout = () => {
+    localStorage.removeItem('userSession');
     userSession.signUserOut(window.location.origin);
     setConnected(false);
     setAddress('');
@@ -228,13 +249,15 @@ const WalletConnect = () => {
             <button onClick={logout} className="button button-red">Logout</button>
             {ownedInscriptions.length > 0 ? (
               <div>
-                <h3>Your inscriptions: </h3>
-                {ownedInscriptions.map((inscription) => (
-                  <div className="pt-5" key={inscription.id}>
-                    <img src={inscription.imageUrl} alt={`Inscription ${inscription.id}`} className="img-fluid mt-3" />
-                    <a href={inscription.imageUrl} className="button" download target="_blank" rel="noreferrer">Download Image</a>
-                  </div>
-                ))}
+                <h3>Your ordinals: </h3>
+                <div className="d-flex ordinals pt-5 justify-content-center">
+                  {ownedInscriptions.map((inscription) => (
+                    <div className="ordinal" key={inscription.id}>
+                      <img src={inscription.imageUrl} alt={`Inscription ${inscription.id}`} className="img-fluid mt-3" />
+                      {/* <a href={inscription.imageUrl} className="button" download target="_blank" rel="noreferrer">Download Image</a> */}
+                    </div>
+                  ))}
+                </div>
               </div>
             ) : (
               errorMessage && <p>{errorMessage}</p>
@@ -258,6 +281,14 @@ const WalletConnect = () => {
               </div>
             )}
             {formSubmitted && <p>Your email has been submitted. Thank you!</p>}
+            <div className="d-flex ordinals pt-5 justify-content-center">
+                  {inscriptions.map((inscription) => (
+                    <div className="ordinal" key={inscription.id}>
+                      <img src={inscription.imageUrl} alt={`Inscription ${inscription.id}`} className="img-fluid mt-3" />
+                      {/* <a href={inscription.imageUrl} className="button" download target="_blank" rel="noreferrer">Download Image</a> */}
+                    </div>
+                  ))}
+                </div>
           </div>
         </div>
       ) : (
