@@ -36,25 +36,25 @@ const WalletConnect = () => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formError, setFormError] = useState(''); // Obsługa błędów
 
-    // Użyj useEffect do sprawdzania sesji po odświeżeniu strony
-    useEffect(() => {
-      if (userSession.isUserSignedIn()) {
-        const userData = userSession.loadUserData();
-        const stxAddress = network.isMainnet() ? userData.profile.stxAddress.mainnet : userData.profile.stxAddress.testnet;
-        
-        // Pobierz adres Bitcoin po zalogowaniu
-        const walletType = detectWallet(userData);
-        getBitcoinAddress(walletType).then((bitcoinAddress) => {
-          if (bitcoinAddress) {
-            setAddress(bitcoinAddress);
-            setConnected(true);
-            checkInscriptions(bitcoinAddress); // Sprawdź inskrypcje
-          } else {
-            setErrorMessage('Unable to fetch Bitcoin Ordinals address.');
-          }
-        });
-      }
-    }, []);
+  // Użyj useEffect do sprawdzania sesji po odświeżeniu strony
+  useEffect(() => {
+    if (userSession.isUserSignedIn()) {
+      const userData = userSession.loadUserData();
+      const stxAddress = network.isMainnet() ? userData.profile.stxAddress.mainnet : userData.profile.stxAddress.testnet;
+
+      // Pobierz adres Bitcoin po zalogowaniu
+      const walletType = detectWallet(userData);
+      getBitcoinAddress(walletType).then((bitcoinAddress) => {
+        if (bitcoinAddress) {
+          setAddress(bitcoinAddress);
+          setConnected(true);
+          checkInscriptions(bitcoinAddress); // Sprawdź inskrypcje
+        } else {
+          setErrorMessage('Unable to fetch Bitcoin Ordinals address.');
+        }
+      });
+    }
+  }, []);
 
   const authenticate = () => {
     showConnect({
@@ -281,14 +281,6 @@ const WalletConnect = () => {
               </div>
             )}
             {formSubmitted && <p>Your email has been submitted. Thank you!</p>}
-            <div className="d-flex ordinals pt-5 justify-content-center">
-                  {inscriptions.map((inscription) => (
-                    <div className="ordinal" key={inscription.id}>
-                      <img src={inscription.imageUrl} alt={`Inscription ${inscription.id}`} className="img-fluid mt-3" />
-                      {/* <a href={inscription.imageUrl} className="button" download target="_blank" rel="noreferrer">Download Image</a> */}
-                    </div>
-                  ))}
-                </div>
           </div>
         </div>
       ) : (
