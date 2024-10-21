@@ -24,7 +24,7 @@ const inscriptions = [
   },
 ];
 
-const infoMessage = "If you don't want to log in or are experiencing issues with logging in, please contact us at homemadegame.apps@gmail.com. In your message, make sure to include your wallet ID and transaction ID to receive your image.";
+const infoMessage = "Log in to receive market updates and provide your shipping details for your Polo Legacy artwork. If you encounter issues or prefer not to log in, contact us at homemadegame.apps@gmail.com, including your wallet and transaction ID for assistance.";
 
 const WalletConnect = () => {
   const [address, setAddress] = useState('');
@@ -216,24 +216,6 @@ const WalletConnect = () => {
                 decoding="async"
                 className="img-fluid"
                 src="https://homemadegame.com/wp-content/uploads/2023/05/HomeMadeGame.jpg"
-                alt=""
-                loading="lazy"
-              />
-            </picture>
-          </div>
-          <div className="d-flex flex-column flex-sm-row justify-content-around align-items-center text-center mt-5">
-            <picture>
-              <source
-                srcSet="https://homemadegame.com/wp-content/uploads/2024/09/iTunesArtwork@2xp@2x.webp"
-                type="image/webp"
-              />
-              <source
-                srcSet="https://homemadegame.com/wp-content/uploads/2024/09/iTunesArtwork@2xp@2x.jpg"
-              />
-              <img
-                decoding="async"
-                className="img-fluid images-img"
-                src="https://homemadegame.com/wp-content/uploads/2024/09/iTunesArtwork@2xp@2x.png"
                 alt=""
                 loading="lazy"
               />
